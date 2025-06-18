@@ -673,18 +673,28 @@ select.form-control {
   color: white;
 }
 
-.header__title {
+/* Styles for header content when moved into the panel */
+.header__title--panel {
+  color: white; /* Already a settings-section__title, so color is inherited */
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--space-8);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  margin-bottom: var(--space-4) !important; /* Override default margin of settings-section__title */
 }
 
-.header__instructions {
+.settings-panel__instructions.header__instructions--panel {
   font-size: var(--font-size-lg);
   color: rgba(255, 255, 255, 0.8);
   margin: 0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  padding-bottom: var(--space-8); /* Add some spacing below */
+}
+
+/* Ensure rocketsPerLaunchInput uses form-control styles now it's in a form-group */
+#rocketsPerLaunchInput {
+  text-align: center; /* Keep text centered as before */
 }
 
 .canvas {
@@ -957,21 +967,12 @@ select.form-control {
     left: auto;
   }
 
-  .header {
+  /* Remove specific positioning for header as it's now in the panel */
+  /* .header {
     left: var(--space-12);
     right: var(--space-12);
     transform: none;
-  }
-}
-
-/* Animations */
-@keyframes sparkle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.2); }
-}
-
-.sparkle-effect {
-  animation: sparkle 0.5s ease-in-out;
+  } */
 }
 
 /* Status indicators for settings */

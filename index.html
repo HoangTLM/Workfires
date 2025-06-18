@@ -8,20 +8,6 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
-        <header class="header">
-            <h1 class="header__title">🎆 Fireworks Simulator</h1>
-            <p class="header__instructions">Click anywhere to launch fireworks!</p>
-        </header>
-
-        <!-- Global Controls for Auto Fire -->
-        <div id="globalControls" style="position: absolute; top: 100px; left: 50%; transform: translateX(-50%); z-index: 10; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; color: white; display: flex; align-items: center; gap: 15px;">
-            <button id="autoFireButton" class="btn btn--secondary btn--sm" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">Start Auto Fire</button>
-            <label for="rocketsPerLaunchInput" style="font-size: var(--font-size-sm);">Rockets/Launch:</label>
-            <input type="number" id="rocketsPerLaunchInput" value="1" min="1" max="20" step="1" style="width: 50px; padding: 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.2); color: white; text-align: center;">
-            <span id="rocketsPerLaunchValue" style="min-width: 20px; text-align: left; font-weight: bold;">1</span>
-        </div>
-
         <!-- Main Canvas -->
         <canvas id="fireworksCanvas" class="canvas"></canvas>
         
@@ -29,15 +15,21 @@
         <div id="youtubePlayerElement" style="position: absolute; top: -9999px; left: -9999px;"></div>
 
         <!-- Settings Panel -->
-        <div class="settings-panel" id="settingsPanel">
+        <div class="settings-panel collapsed" id="settingsPanel">
             <div class="settings-panel__header">
                 <h3>Settings</h3>
                 <button class="btn btn--secondary btn--sm" id="togglePanel">
-                    <span id="toggleIcon">−</span>
+                    <span id="toggleIcon">+</span>
                 </button>
             </div>
-Í
+
             <div class="settings-panel__content" id="settingsContent">
+                <!-- Moved Header Content -->
+                <div class="settings-section">
+                    <h4 class="settings-section__title header__title--panel">🎆 Fireworks Simulator</h4>
+                    <p class="settings-panel__instructions header__instructions--panel">Click on canvas to launch!</p>
+                </div>
+
                 <!-- Firework Type Section -->
                 <div class="settings-section">
                     <h4 class="settings-section__title">Firework Type</h4>
@@ -130,10 +122,18 @@
                 <div class="settings-section">
                     <h4 class="settings-section__title">Auto Mode</h4>
                     <div class="form-group">
+                        <button id="autoFireButton" class="btn btn--secondary btn--sm btn--full-width">Start Auto Fire</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="rocketsPerLaunchInput" class="form-label">Rockets/Launch: <span id="rocketsPerLaunchValue">1</span></label>
+                        <input type="number" id="rocketsPerLaunchInput" class="form-control" value="1" min="1" max="20" step="1">
+                    </div>
+                    <div class="form-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="autoMode"> Auto-launch
                         </label>
                     </div>
+
                     <div class="form-group">
                         <label class="form-label">Launch Frequency: <span id="frequencyValue">2.0</span>s</label>
                         <input type="range" class="form-range" id="launchFrequency" min="0.5" max="5" step="0.5" value="2.0">
