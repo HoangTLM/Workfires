@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fireworks Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header__title">🎆 Fireworks Simulator</h1>
+            <p class="header__instructions">Click anywhere to launch fireworks!</p>
+        </header>
+
+        <!-- Global Controls for Auto Fire -->
+        <div id="globalControls" style="position: absolute; top: 100px; left: 50%; transform: translateX(-50%); z-index: 10; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; color: white; display: flex; align-items: center; gap: 15px;">
+            <button id="autoFireButton" class="btn btn--secondary btn--sm" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">Start Auto Fire</button>
+            <label for="rocketsPerLaunchInput" style="font-size: var(--font-size-sm);">Rockets/Launch:</label>
+            <input type="number" id="rocketsPerLaunchInput" value="1" min="1" max="20" step="1" style="width: 50px; padding: 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.2); color: white; text-align: center;">
+            <span id="rocketsPerLaunchValue" style="min-width: 20px; text-align: left; font-weight: bold;">1</span>
+        </div>
+
+        <!-- Main Canvas -->
+        <canvas id="fireworksCanvas" class="canvas"></canvas>
+        
+        <!-- Hidden Div for YouTube Player -->
+        <div id="youtubePlayerElement" style="position: absolute; top: -9999px; left: -9999px;"></div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-panel__header">
+                <h3>Settings</h3>
+                <button class="btn btn--secondary btn--sm" id="togglePanel">
+                    <span id="toggleIcon">−</span>
+                </button>
+            </div>
+Í
+            <div class="settings-panel__content" id="settingsContent">
+                <!-- Firework Type Section -->
+                <div class="settings-section">
+                    <h4 class="settings-section__title">Firework Type</h4>
+                    <div class="form-group">
+                        <select class="form-control" id="fireworkType">
+                            <option value="Random">Random</option>
+                            <option value="Burst">Burst</option>
+                            <option value="Chrysanthemum">Chrysanthemum</option>
+                            <option value="Peony">Peony</option>
+                            <option value="Willow">Willow</option>
+                            <option value="Palm">Palm</option>
+                            <option value="Ring">Ring</option>
+                            <option value="Heart">Heart</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Color Settings -->
+                <div class="settings-section">
+                    <h4 class="settings-section__title">Color Settings</h4>
+                    <div class="form-group">
+                        <label class="form-label">Primary Color</label>
+                        <select class="form-control" id="primaryColor">
+                            <option value="Random">Random</option>
+                            <option value="Red">Red (Strontium)</option>
+                            <option value="Green">Green (Barium)</option>
+                            <option value="Blue">Blue (Copper)</option>
+                            <option value="Gold">Gold (Iron)</option>
+                            <option value="Silver">Silver (Magnesium)</option>
+                            <option value="Purple">Purple (Strontium + Copper)</option>
+                            <option value="White">White (Magnesium)</option>
+                            <option value="Orange">Orange (Calcium)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="multiColor"> Multi-color mode
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Physics Controls -->
+                <div class="settings-section">
+                    <h4 class="settings-section__title">Physics Controls</h4>
+                    <div class="form-group">
+                        <label class="form-label">Gravity: <span id="gravityValue">0.3</span></label>
+                        <input type="range" class="form-range" id="gravity" min="0.1" max="2" step="0.1" value="0.3">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Launch Velocity: <span id="velocityValue">18</span></label>
+                        <input type="range" class="form-range" id="launchVelocity" min="5" max="25" step="1" value="18">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Particle Count: <span id="particleCountValue">100</span></label>
+                        <input type="range" class="form-range" id="particleCount" min="20" max="200" step="10" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Explosion Radius: <span id="radiusValue">200</span></label>
+                        <input type="range" class="form-range" id="explosionRadius" min="50" max="300" step="10" value="200">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Particle Lifetime: <span id="lifetimeValue">1.5</span>s</label>
+                        <input type="range" class="form-range" id="particleLifetime" min="0.5" max="3" step="0.1" value="1.5">
+                    </div>
+                </div>
+
+                <!-- Visual Effects -->
+                <div class="settings-section">
+                    <h4 class="settings-section__title">Visual Effects</h4>
+                    <div class="form-group">
+                        <label class="form-label">Brightness: <span id="brightnessValue">0.8</span></label>
+                        <input type="range" class="form-range" id="brightness" min="0.3" max="1" step="0.1" value="0.8">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Trail Length: <span id="trailValue">25</span></label>
+                        <input type="range" class="form-range" id="trailLength" min="5" max="50" step="5" value="25">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fade Speed: <span id="fadeValue">0.02</span></label>
+                        <input type="range" class="form-range" id="fadeSpeed" min="0.01" max="0.1" step="0.01" value="0.02">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="sparkleEffect" checked> Sparkle Effect
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Auto Mode Controls -->
+                <div class="settings-section">
+                    <h4 class="settings-section__title">Auto Mode</h4>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="autoMode"> Auto-launch
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Launch Frequency: <span id="frequencyValue">2.0</span>s</label>
+                        <input type="range" class="form-range" id="launchFrequency" min="0.5" max="5" step="0.5" value="2.0">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="randomPosition" checked> Random Position
+                        </label>
+                    </div>
+                </div>
+
+                <!-- YouTube Audio Settings -->
+                <div class="settings-section">
+                    <h4 class="settings-section__title">YouTube Audio</h4>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="backgroundMusicEnabled" checked> Enable Music
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Music Volume: <span id="backgroundMusicVolumeValue">20</span>%</label>
+                        <input type="range" class="form-range" id="backgroundMusicVolume" min="0" max="100" step="1" value="20">
+                    </div>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: var(--space-16) 0;">
+                    <div class="form-group">
+                        <label for="youtubeLinkInput" class="form-label">YouTube Link (Audio Only)</label>
+                        <input type="text" id="youtubeLinkInput" class="form-control" placeholder="Paste YouTube video link here">
+                    </div>
+                    <div class="form-group">
+                        <button id="loadYouTubeAudioButton" class="btn btn--secondary btn--sm btn--full-width">Load/Play YouTube Audio</button>
+                    </div>
+                </div>
+
+                <!-- Presets -->
+                <div class="settings-section">
+                    <h4 class="settings-section__title">Presets</h4>
+                    <div class="preset-buttons">
+                        <button class="btn btn--secondary btn--sm preset-btn" data-preset="Spectacular">Spectacular</button>
+                        <button class="btn btn--secondary btn--sm preset-btn" data-preset="Gentle">Gentle</button>
+                        <button class="btn btn--secondary btn--sm preset-btn" data-preset="Rapid Fire">Rapid Fire</button>
+                        <button class="btn btn--secondary btn--sm preset-btn" data-preset="Giant Bursts">Giant Bursts</button>
+                    </div>
+                    <button class="btn btn--outline btn--sm btn--full-width" id="resetButton">Reset to Defaults</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
